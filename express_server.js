@@ -60,6 +60,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/urls");
 });
 
+app.post("/urls/:id" , (req, res) => {
+  res.redirect("/urls");
+});
+
 app.post("/urls", (req, res) => {
   console.log(req.body);  
   res.send("Ok");         
