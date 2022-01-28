@@ -11,9 +11,9 @@
       </div>
     </div>
     
-    <% if (username) { %>
+    <% if (locals.user) { %>
       <form action="/logout" method="post">
-        <label for="username">Logged in as: <%= username %></label>
+        <label for="email">Logged in as: <%= user.email %></label> 
        
         <button type="submit" name="logout">Logout</button>
       </form>
