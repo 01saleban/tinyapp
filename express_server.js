@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const PORT = 8080; // default port 8080
+const PORT = 8080; 
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser')
 
@@ -14,9 +14,15 @@ const generateRandomString = function() {
   return Math.random().toString(36).substr(2, 8);
   };
 
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  const urlDatabase = {
+    b6UTxQ: {
+        longURL: "https://www.tsn.ca",
+        userID: "aJ48lW"
+    },
+    i3BoGr: {
+        longURL: "https://www.google.ca",
+        userID: "aJ48lW"
+    }
 };
 
 const users = { 
@@ -49,7 +55,6 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-
 app.post("/urls", (req, res) => {
   let longURL = req.body.longURL;
   let shortURL = generateRandomString();
@@ -67,8 +72,19 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = { 
-    username: req.cookies["user_id"]
+
+  let obj1 = {};
+  const loginID = req.cookies.id;
+  for (let url in urlDatabase) {
+    if (urlDatabase[url].urlID === loginID) {
+      obj1[url] = urlDatabase[url];
+    }
+  }
+  const userId = req.cookies["user_id"]
+  const user = users[userId];
+  let templateVars = {
+    urls: obj1,
+    user,
   };
   res.render("urls_new", templateVars);
 });
@@ -145,6 +161,7 @@ app.post("/register", (req, res) => {
     users[userID] = {
       id: userID,
       email: email,
+      password: password
     };
     console.log(users);
     res.cookie("user_id", userID);
