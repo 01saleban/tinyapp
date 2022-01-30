@@ -1,3 +1,9 @@
+const {
+  getUserByEmail,
+  generateRandomString,
+  urlsForUser,
+} = require("./helper");
+
 const express = require("express");
 const app = express();
 const PORT = 8080; 
@@ -14,10 +20,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 app.set("view engine", "ejs");
-
-const generateRandomString = function() {
-  return Math.random().toString(36).substr(2, 8);
-  };
 
   const urlDatabase = {
     b6UTxQ: {
@@ -71,9 +73,19 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const shortURL = req.params.shortURL;
-  const longURL = urlDatabase[shortURL];
-  res.redirect(longURL);
+  let individualURL = urlsForUser(req.session.id, urlDatabase);
+  if (individualURL[req.params.shortURL]) {
+    let templateVars = {
+      shortURL: req.params.shortURL,
+      longURL: urlDatabase[req.params.shortURL].longURL,
+      username: users[req.session.id].email,
+      user: users[req.session["id"]],
+    };
+    res.render("urls_show", templateVars);
+    return;
+  } else {
+    res.status(400).send(" URL does not exist ");
+  }
 });
 
 app.get("/urls/new", (req, res) => {
@@ -159,7 +171,7 @@ app.post("/register", (req, res) => {
   if (email === "" || password === "") {
     res.status(404);
     res.send("Email and Password cannot be blank");
-  } else if (emailLookUp(email, users)) {
+  } else if (getUserByEmail(email, users)) {
     res.status(400).send("Email already exists. Please login!!");
   } else {
     let hashedPassword = bcrypt.hashSync(password, 10);
@@ -174,14 +186,6 @@ app.post("/register", (req, res) => {
   
   }
 });
-const emailLookUp = (email, users) => {
-  for (let key in users) {
-    if (users[key].email === email) {
-      return true;
-    }
-  }
-  return false;
-};
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
