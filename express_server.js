@@ -116,7 +116,13 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.longURL;
+  const shortURL = req.params.shortURL
+  const id = req.session.id
+  if (urlDatabase[shortURL].id != id){
+    const error = 'Please login.';
+    res.send(error);
+  }
+  urlDatabase[req.params.shortURL].longURL = req.body.longURL;
   res.redirect("/urls");
 });
 
@@ -137,6 +143,13 @@ app.get("/login", (req, res) => {
   };
   res.render("urls_login", templateVars);
 });
+
+app.get("/", (req, res) => {
+  if (req.session.id){
+    res.redirect("/urls");
+  } else {
+    res.redirect ("/login");
+}});
 
 app.post("/login", (req, res) => {
   let email = req.body.email;
