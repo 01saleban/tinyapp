@@ -1,30 +1,62 @@
-function generateRandomString() {
-  let randomString = Math.random().toString(36).substring(2, 10);
-  return randomString;
+const getUserByEmail = function (email, users) {
+  for (let userID in users) {
+    const user = users[userID]
+    if (email === user.email) {
+      return user
+    }
+  }
+  return undefined
 }
-const urlsForUser = (id, urlDatabase) => {
-  let filterDatabase = {};
-  for (let key in urlDatabase) {
-    if (urlDatabase[key].userID === id) {
-      filterDatabase[key] = urlDatabase[key];
-    }
-  }
-  return filterDatabase;
-};
-const getUserByEmail = (email, users) => {
-  for (let key in users) {
-    const user = users[key];
-    if (users[key].email === email) {
-      return user;
-    }
-  }
-  return null;
-};
 
-// function will compare email that client is entering to the email in the users database
+const urlsForUser = function(userID) {
+
+  let usersObject = {};
+  for (const shortURL in urlDatabase) {
+    if(urlDatabase[shortURL].userID === userID) {
+
+      usersObject[shortURL] = urlDatabase[shortURL]
+    }
+  }
+
+  return usersObject;
+}
+
+const getUserById = function(userDB, userID) {
+  if (userDB[userID]) {
+    return userDB[userID]
+  } else {
+    return null;
+  }
+}
+const createUser = function(email, password, users) {
+  const userID = generateRandomString();
+
+
+  users[userID] = {
+    id: userID,
+    email,
+    password
+  };
+
+  return userID
+}
+
+function generateRandomString() {
+  let result = ' ';
+  let characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let charactersLength = characters.length;
+  for (let i = 0; i < 6; i ++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+
 
 module.exports = {
-  urlsForUser,
-  getUserByEmail,
   generateRandomString,
-};
+  getUserByEmail,
+  urlsForUser,
+  getUserById,
+  createUser
+}
