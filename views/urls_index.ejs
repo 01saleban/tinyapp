@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head></head>
+  <header><%- include('partials/_header') %></header>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>TinyApp</title>
+  
 </head>
-
 <body>
-  <%- include('partials/_header') %>
   <main style="margin: 1em;">
     <h3>My URLs</h3>
-    <% if (user) { %>
     <table class="table">
       <thead>
         <tr>
@@ -27,7 +26,9 @@
         <% for(let url in urls) { %>
           <tr>
             <td><%= url %></td>
-            <td><%= urls[url].longURL %></td>
+            <td>
+              <a href="#"></a><%= urls[url].longURL %>
+            </td>
             <td>
               <form method="GET" action="/urls/<%= url %>">
                 <input type="submit" value="Edit" class="btn btn-outline-primary">
@@ -46,13 +47,6 @@
         <% } %>
       </tbody>
     </table>
-    <% } else { %>
-      <h5 class="text-muted mt-3">
-        <center>
-          <p style="color: white;">PLEASE LOGIN OR REGISTER A NEW ACCOUNT </p>
-        </center>
-      </h5>
-      <% } %>
   </main>
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
